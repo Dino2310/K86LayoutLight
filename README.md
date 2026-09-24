@@ -4,7 +4,7 @@
 
 ## Русский
 
-Утилита для Windows на C# / Windows Forms, которая переключает сохранённые слои подсветки клавиатуры K86 в зависимости от языка ввода активного окна: EN или RU. Цвета слоёв предварительно настраиваются в фирменном ПО клавиатуры. Интерфейс приложения — на русском языке.
+Утилита для Windows на C# / Windows Forms, которая переключает сохранённые слои подсветки клавиатуры K86 в зависимости от текущего языка клавиатурного ввода: EN или RU. Цвета слоёв предварительно настраиваются в фирменном ПО клавиатуры. Интерфейс приложения — на русском языке.
 
 ### Возможности
 
@@ -45,13 +45,21 @@ dotnet run --project K86LayoutLight.csproj -c Release
 
 Результат обычной сборки: `bin\Release\net8.0-windows\K86LayoutLight.exe`. При переносе такой сборки копируйте всю папку с результатом сборки.
 
+### Маленький EXE для Windows x64
+
+Запустите `build.bat` двойным щелчком (из терминала без паузы: `build.bat --no-pause`). Батник собирает `K86LayoutLight.csproj` из своей папки. Для сборки нужен .NET SDK 8 или новее.
+
+Результат: `Ready\K86LayoutLight.exe`. Переносите только этот файл. На целевом компьютере нужен **.NET Desktop Runtime 8 x64**; библиотеки .NET внутрь EXE не включаются.
+
 ### Автономная сборка для Windows x64
 
 ```powershell
-dotnet publish K86LayoutLight.csproj -c Release -r win-x64 --self-contained true -o artifacts/publish/win-x64
+dotnet publish K86LayoutLight.csproj -c Release -p:PublishProfile=Standalone
 ```
 
-Перенесите всю папку `artifacts\publish\win-x64` на целевой компьютер и запустите `K86LayoutLight.exe`. .NET отдельно устанавливать не требуется. Команда предназначена для x64; для другой архитектуры нужен соответствующий идентификатор среды выполнения и проверка на целевом устройстве.
+Это отдельный вариант со встроенным .NET; он значительно больше. Для сборки требуется .NET SDK 8 или новее.
+
+Результат — один файл `artifacts\standalone\win-x64\K86LayoutLight.exe`. Переносите только этот EXE: соседние DLL и установка .NET на целевом компьютере не нужны. При запуске встроенные системные библиотеки .NET автоматически распаковываются во временную папку. Сборка предназначена для Windows x64.
 
 ### Первый запуск
 
@@ -76,13 +84,13 @@ dotnet publish K86LayoutLight.csproj -c Release -r win-x64 --self-contained true
 - Журнал: `%LOCALAPPDATA%\K86LayoutLight\diagnostics.log`, доступен кнопкой «Открыть журнал».
 - Если клавиатура не найдена, проверьте режим подключения, закройте фирменное ПО и нажмите «Подключиться».
 - Если обнаружено несколько K86, оставьте подключённой одну. При наличии одного проводного устройства код отдаёт ему приоритет.
-- Если подсветка не меняется, проверьте сохранённые слои, автоматический режим и язык активного окна. Отпустите клавиши и дождитесь заданной паузы.
+- Если подсветка не меняется, проверьте сохранённые слои, автоматический режим и текущий язык ввода на языковой панели Windows. Отпустите клавиши и дождитесь заданной паузы.
 
 Лицензия: [MIT](LICENSE).
 
 ## English
 
-A C# / Windows Forms utility for Windows that switches saved K86 keyboard lighting layers according to the active window's input language: EN or RU. Configure the layer colors beforehand using the keyboard vendor's software. The application UI is in Russian.
+A C# / Windows Forms utility for Windows that switches saved K86 keyboard lighting layers according to the current keyboard input language: EN or RU. Configure the layer colors beforehand using the keyboard vendor's software. The application UI is in Russian.
 
 ### Features
 
@@ -123,13 +131,21 @@ dotnet run --project K86LayoutLight.csproj -c Release
 
 The framework-dependent executable is `bin\Release\net8.0-windows\K86LayoutLight.exe`. Copy the entire build output directory when moving this build to another computer.
 
+### Small Windows x64 EXE
+
+Double-click `build.bat` (use `build.bat --no-pause` in a terminal). It builds `K86LayoutLight.csproj` from the batch file's directory. Building requires .NET SDK 8 or newer.
+
+Result: `Ready\K86LayoutLight.exe`. Copy only this file. The target PC requires **.NET Desktop Runtime 8 x64**; .NET libraries are not bundled into the EXE.
+
 ### Self-contained Windows x64 build
 
 ```powershell
-dotnet publish K86LayoutLight.csproj -c Release -r win-x64 --self-contained true -o artifacts/publish/win-x64
+dotnet publish K86LayoutLight.csproj -c Release -p:PublishProfile=Standalone
 ```
 
-Copy the entire `artifacts\publish\win-x64` directory to the target computer and run `K86LayoutLight.exe`. No separate .NET installation is needed. This command targets x64; other architectures require the appropriate runtime identifier and verification on the target device.
+This separate option bundles .NET and is significantly larger. Building requires .NET SDK 8 or newer.
+
+The result is a single file: `artifacts\standalone\win-x64\K86LayoutLight.exe`. Copy only this EXE; adjacent DLLs and a .NET installation on the target PC are not required. Bundled native .NET libraries are automatically extracted to a temporary directory at startup. This build targets Windows x64.
 
 ### First launch
 
@@ -154,6 +170,6 @@ Startup stores the current EXE path in the `K86LayoutLight` value under `HKEY_CU
 - Log: `%LOCALAPPDATA%\K86LayoutLight\diagnostics.log`; the “Открыть журнал” button opens it.
 - If no keyboard is found, check its connection mode, exit the vendor software, and click “Подключиться” to reconnect.
 - If multiple K86 devices are detected, leave one connected. A single wired device takes priority in the implementation.
-- If lighting does not change, check the saved layers, automatic mode, and active window's input language. Release the keys and wait for the configured pause.
+- If lighting does not change, check the saved layers, automatic mode, and the current input language shown in the Windows language bar. Release the keys and wait for the configured pause.
 
 License: [MIT](LICENSE).

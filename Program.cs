@@ -131,7 +131,7 @@ internal sealed class MainForm : Form
         panel.Controls.Add(new Label { AutoSize = true, Text = "Используются сохранённые слои клавиатуры. Цвета задаются в фирменном ПО." });
         panel.Controls.Add(auto);
         panel.Controls.Add(startup);
-        auto.Text = "Автоматически переключать подсветку по раскладке активного окна";
+        auto.Text = "Автоматически переключать подсветку по текущему языку ввода";
         auto.Checked = settings.Auto;
         using (var key = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Run")) 
         { 
@@ -550,6 +550,16 @@ internal static class Native
     static extern uint GetWindowThreadProcessId(IntPtr window, IntPtr process);
     [DllImport("user32.dll")]
     static extern IntPtr GetKeyboardLayout(uint thread);
+    [StructLayout(LayoutKind.Sequential)]
+    struct GuiThreadInfo
+    {
+        public uint Size, Flags;
+        public IntPtr Active, Focus, Capture, MenuOwner, MoveSize, Caret;
+        public int CaretLeft, CaretTop, CaretRight, CaretBottom;
+    }
+    [DllImport("user32.dll", SetLastError = true)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    static extern bool GetGUIThreadInfo(uint thread, ref GuiThreadInfo info);
     public static int ActiveLanguage() 
     { 
         var w = GetForegroundWindow();
@@ -557,9 +567,18 @@ internal static class Native
         if (w == IntPtr.Zero) 
             return 0;
 
-        uint t = GetWindowThreadProcessId(w, IntPtr.Zero);
+        // The top-level window and its focused editor can belong to different
+        // threads (e.g. modern Notepad). Read the actual keyboard input target.
+        // Thread 0 here means the foreground queue, not our own UI/worker thread.
+        var info = new GuiThreadInfo { Size = (uint)Marshal.SizeOf<GuiThreadInfo>() };
+        if (!GetGUIThreadInfo(0, ref info))
+            return 0;
 
-        if (t == 0)
+        uint t = GetWindowThreadProcessId(info.Focus != IntPtr.Zero ? info.Focus : w, IntPtr.Zero);
+
+        // Focus may move while querying. Retry on the next tick instead of
+        // applying a layout sampled from an outgoing foreground window.
+        if (t == 0 || GetForegroundWindow() != w)
             return 0; 
         
         return (int)(GetKeyboardLayout(t).ToInt64() & 0x3ff);

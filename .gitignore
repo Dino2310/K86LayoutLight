@@ -2,6 +2,7 @@
 [Bb]in/
 [Oo]bj/
 [Aa]rtifacts/
+/Ready/
 [Tt]est[Rr]esults/
 coverage/
 *.coverage
