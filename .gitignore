@@ -1,0 +1,78 @@
+# .NET / C# build output
+[Bb]in/
+[Oo]bj/
+[Aa]rtifacts/
+[Tt]est[Rr]esults/
+coverage/
+*.coverage
+*.coveragexml
+*.trx
+*.nupkg
+*.snupkg
+
+# NuGet restore cache (keep packages.config and lock files)
+packages/
+*.nuget.props
+*.nuget.targets
+
+# Visual Studio: local settings, caches and diagnostics
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.sln.ide
+*.VC.db
+*.VC.VC.opendb
+*.pidb
+*.svclog
+*.psess
+*.vsp
+*.vspx
+*.sap
+*.pubxml.user
+
+# Visual Studio Code: workspace settings and local history
+.vscode/
+*.code-workspace
+.history/
+.ionide/
+
+# AI agents: machine-local state, sessions and private settings
+.codex/
+.claude/*
+!.claude/agents/
+!.claude/commands/
+!.claude/skills/
+!.claude/settings.json
+CLAUDE.local.md
+.cursor/*
+!.cursor/rules/
+!.cursor/commands/
+!.cursor/skills/
+!.cursor/agents/
+.aider*
+.continue/*
+!.continue/rules/
+!.continue/agents/
+!.continue/prompts/
+!.continue/skills/
+.copilot/
+
+# Local credentials and environment overrides
+.env
+.env.*
+!.env.example
+!.env.sample
+
+# Logs, temporary files and OS metadata
+*.log
+*.tmp
+*.temp
+*.bak
+*.orig
+*.rej
+*~
+Thumbs.db
+Desktop.ini
+.DS_Store
