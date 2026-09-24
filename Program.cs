@@ -59,7 +59,7 @@ internal sealed class MainForm : Form
         catch
         { }
 
-        Text = "K86 — подсветка по раскладке v6.1"; ClientSize = new Size(700, 470);
+        Text = "K86 — подсветка по раскладке"; ClientSize = new Size(700, 470);
         FormBorderStyle = FormBorderStyle.FixedDialog; MaximizeBox = false;
         var panel = new FlowLayoutPanel {
                                             Dock = DockStyle.Fill,
